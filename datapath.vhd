@@ -40,43 +40,51 @@ Architecture Behavioural of datapath  is
 BEGIN
 	green <= p1_top_sig;
 	
-	process(clock)
-		variable count : unsigned (14 downto 0) := "000000000000000";
-	begin
-		
-		if (count = "111111111111110")then
-			slowclock <= '1';
-			count := "000000000000000";
-		else
-			count := count + "000000000000001";
-			slowclock <= '0';
+--	process(clock)
+--		variable count : unsigned (12 downto 0) := "0000000000000";
+--	begin
+--		
+--		if (count = "1111111111110")then
+--			slowclock <= '1';
+--			count := "0000000000000";
+--		else
+--			count := count + "0000000000001";
+--			slowclock <= '0';
+--		end if;
+--	end process;
+	
+		process( CLOCK )
+			variable count: unsigned(27 downto 0) := "0000000000000000000000000000";
+			variable loop_count: unsigned(5 downto 0);
+		begin	
+		if( CLOCK = '1' ) then
+			if( loop_count < "01010") then
+				if( count = "0011111110101111000010000000" ) then
+					slowclock <= not slowclock;
+					count := "0000000000000000000000000000";
+					loop_count := loop_count + 1;
+				else
+					count := count + 1;
+				end if;
+			elsif (loop_count < "10100") then
+				if( count = "0010011000100101100111111111" ) then
+					slowclock <= not slowclock;
+					count := "0000000000000000000000000000";
+					loop_count := loop_count + 1;
+				else
+					count := count + 1;
+				end if;
+			else
+				if( count = "0001110010011100001101111111" ) then
+					slowclock <= not slowclock;
+					count := "0000000000000000000000000000";
+					--loop_count := loop_count + 1;
+				else
+					count := count + 1;
+				end if;
+			end if;
 		end if;
-	end process;
-	
---	process(clock)
---		variable count : unsigned (27 downto 0) := "0000000000000000000000000000";
---	begin
---				if( count = "0000000000000001111111111110" ) then
---					slowclock <= '1';
---					count := "0000000000000000000000000000";
---				else
---					count := count + "0000000000000000000000000001";
---					slowclock <= '0';
---				end if;
---	end process;
-	
-	
---	process(clock)
---		variable count : unsigned (27 downto 0) := "0000000000000000000000000000";
---	begin
---				if( count = "0011111110101111000010000000" ) then
---					slowclock <= '1';
---					count := "0000000000000000000000000000";
---				else
---					count := count + 1;
---					slowclock <= '0';
---				end if;
---	end process;
+		end process;
 	
 	
 	process(slowclock)
@@ -230,6 +238,7 @@ BEGIN
 			plot <= '0';
 			x_state <= "00000001";
 			y_state <= "0000000";
+			--p1_top:=p1_top_sig;
 					if (x_state = "00000000") then
 						if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
 							colour <="111";
