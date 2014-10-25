@@ -36,34 +36,63 @@ Architecture Behavioural of datapath  is
 	signal p3_top_sig: unsigned (7 downto 0):="00000000";
 	signal p4_top_sig: unsigned (7 downto 0):="00000000";
 	
-	signal slowclock: std_logic;
+	signal slowclock: std_logic:='0';
 BEGIN
-	green <=p1_top_sig;
+	green <= p1_top_sig;
 	
 	process(clock)
-		variable count : unsigned (12 downto 0) := "0000000000000";
+		variable count : unsigned (14 downto 0) := "000000000000000";
 	begin
-		count := count + "0000000000001";
-		if (count = "1111111111110")then
+		
+		if (count = "111111111111110")then
 			slowclock <= '1';
-			count := "0000000000000";
+			count := "000000000000000";
 		else
+			count := count + "000000000000001";
 			slowclock <= '0';
 		end if;
 	end process;
-
+	
+--	process(clock)
+--		variable count : unsigned (27 downto 0) := "0000000000000000000000000000";
+--	begin
+--				if( count = "0000000000000001111111111110" ) then
+--					slowclock <= '1';
+--					count := "0000000000000000000000000000";
+--				else
+--					count := count + "0000000000000000000000000001";
+--					slowclock <= '0';
+--				end if;
+--	end process;
+	
+	
+--	process(clock)
+--		variable count : unsigned (27 downto 0) := "0000000000000000000000000000";
+--	begin
+--				if( count = "0011111110101111000010000000" ) then
+--					slowclock <= '1';
+--					count := "0000000000000000000000000000";
+--				else
+--					count := count + 1;
+--					slowclock <= '0';
+--				end if;
+--	end process;
+	
+	
 	process(slowclock)
 	begin
 		if(rising_edge(slowclock))then
-		if(p1_sw='1')then
-			if(p1_top_sig > "00000010")then
-				p1_top_sig <= p1_top_sig - "00000001";
+			if(p1_sw='1')then
+				if(p1_top_sig > "00000010")then
+					
+					p1_top_sig <= p1_top_sig - "00000001";
+				end if;
+			elsif(p1_sw='0')then
+				if(p1_top_sig < "10010101")then -- 160-10
+					
+					p1_top_sig <= p1_top_sig + "00000001";
+				end if;
 			end if;
-		elsif(p1_sw='0')then
-			if(p1_top_sig < "10010101")then -- 160-10
-				p1_top_sig <= p1_top_sig + "00000001";
-			end if;
-		end if;
 		end if;
 	end process;
 	
