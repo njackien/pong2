@@ -46,21 +46,20 @@ Architecture Behavioural of datapath  is
 BEGIN
 	--green <= p1_top_sig;
 
-	
-		process( CLOCK )
+		process( clock )
 			variable count: unsigned(21 downto 0) := "0000000000000000000000";
 			variable loop_count: unsigned(10 downto 0) := "00000000000";
-		begin	
+		begin
 		if( CLOCK = '1' ) then
-			if( loop_count < "00011000000") then
-				if( count = "1001100010010110100000" ) then
+			if( loop_count < "0001100000") then
+				if( count = "0110101011001111110000" ) then
 					slowclock <= not slowclock;
 					count := "0000000000000000000000";
 					loop_count := loop_count + 1;
 				else
 					count := count + 1;
 				end if;
-			elsif (loop_count < "11111111111") then
+			elsif (loop_count < "1111111111") then
 				if( count = "0011110100001001000000" ) then
 					slowclock <= not slowclock;
 					count := "0000000000000000000000";
