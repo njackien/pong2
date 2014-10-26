@@ -219,6 +219,8 @@ BEGIN
 		variable p2_top: unsigned (7 downto 0):="00110111";
 		variable p3_top: unsigned (7 downto 0):="00110111";
 		variable p4_top: unsigned (7 downto 0):="00110111";
+		variable puck_x_var: unsigned( 7 downto 0) := "01010000";
+		variable puck_y_var: unsigned( 6 downto 0) := "0111100";
 	begin
 		if(reset2dp = '1' and rising_edge(clock))then	--clear screen and set walls
 			plot <= '1';
@@ -289,6 +291,8 @@ BEGIN
 			p2_top:=p2_top_sig;
 			p3_top:=p3_top_sig;
 			p4_top:=p4_top_sig;
+			puck_x_var:=puck_x;
+			puck_y_var:=puck_y;
 			plot <= '1';
 			--colour <= "000";
 --					if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
@@ -318,30 +322,45 @@ BEGIN
 						if(x_state = "00000101")then -- 5 use a diff color
 							if((y_state > p1_top) and (y_state <(p1_top+10)))then
 								colour <= "100";
+							elsif(x_state = puck_x_var and y_state = puck_y_var) then --puck_x position								--
+								colour <="111";
+							else
+								colour <= "000";
 							end if;
 						elsif(x_State = "00101101")then--70
 							if(y_state > p2_top and y_state <(p2_top+10))then
 								colour <= "100";
+							elsif(x_state = puck_x_var and y_state = puck_y_var) then --puck_x position								--
+								colour <="111";
+							else
+								colour <= "000";
 							end if;
 						elsif(x_State = "01101001")then--105
 							if(y_state > p3_top and y_state <(p3_top+10))then
 								colour <= "011";
+							elsif(x_state = puck_x_var and y_state = puck_y_var) then --puck_x position								--
+								colour <="111";
+							else
+								colour <= "000";
 							end if;
-						elsif(x_state = "10011010")then--154
+						elsif(x_state = "10011010")then--154	
 							if(y_state > p4_top and y_state <(p4_top+10))then
 								colour <= "011";
+							elsif(x_state = puck_x_var and y_state = puck_y_var) then --puck_x position								--
+								colour <="111";
+							else
+								colour <= "000";
 							end if;	
 						else
-							colour <= "000";
+							if(x_state = puck_x_var and y_state = puck_y_var) then --puck_x position								--
+								colour <="111";	
+							elsif(x_state = puck_x_var and y_state = puck_y_var) then --puck_x position								--
+								colour <="111";	
+							else
+								colour <= "000";
+							end if;		
+							
 						end if;
-						
---------------------------------------------------------------------------------------		
-						if(x_state = puck_x and y_state = puck_y) then --puck_x position								--
---							if( y_state = puck_y ) then --puck_y position
-								colour <="111";
---							end if;																	
-						end if;																				--
---------------------------------------------------------------------------------------	
 						
 						x <= std_logic_vector( x_state);
 						x_state <= x_state + "00000001";
