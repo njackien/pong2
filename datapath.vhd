@@ -38,7 +38,7 @@ Architecture Behavioural of datapath  is
 	
 	signal slowclock: std_logic:='0';
 BEGIN
-	green <= p1_top_sig;
+	--green <= p1_top_sig;
 	
 --	process(clock)
 --		variable count : unsigned (12 downto 0) := "0000000000000";
@@ -171,11 +171,12 @@ BEGIN
 		variable sx: signed (1 downto 0);
 		variable sy: signed (1 downto 0);
 		
-		variable p1_top: unsigned (7 downto 0):="00111111";
+		variable p1_top: unsigned (7 downto 0):="00010000";
 		variable p2_top: unsigned (7 downto 0):="00110111";
 		variable p3_top: unsigned (7 downto 0):="00110111";
 		variable p4_top: unsigned (7 downto 0):="00110111";
 	begin
+		p1_top:=p1_top_sig;
 		if(reset2dp = '1' and rising_edge(clock))then	--clear screen and set walls
 			plot <= '1';
 			--colour <= "000";
@@ -197,6 +198,7 @@ BEGIN
 						if(y_state = "1111001") then
 							reset2fsm <= '1';
 							y_state <= "0000000";
+							x_state <= "00000000"; 
 						else
 							reset2fsm <= '0';
 						end if;	
@@ -235,21 +237,34 @@ BEGIN
 					y0:= "00111100";
 					
 		elsif(draw2dp = '1' and rising_edge(clock))then	
-			plot <= '0';
-			x_state <= "00000001";
-			y_state <= "0000000";
-			--p1_top:=p1_top_sig;
-					if (x_state = "00000000") then
-						if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
-							colour <="111";
-						else
-							colour <="000";
-						end if;
+					plot <= '1';
+			--colour <= "000";
+					if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
+						colour <= "111";
+					end if;	
+					
+					if (x_state = "00000000" ) then
+						--if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
+							--colour <="111";
+						--end if;
 						x <= std_logic_vector(x_state);
-						
-					--choose colour
+						x_state <= x_state+ "00000001";
+					elsif (x_state = "10011111") then
+							colour <="000";
+						x <= std_logic_vector(x_state);
+						x_state <= "00000000";
+						y_state <= y_state + "0000001";
+						if(y_state = "1111001") then
+							reset2fsm <= '1';
+							y_state <= "0000000";
+							x_state <= "00000000"; 
+						else
+							reset2fsm <= '0';
+						end if;	
+					else
+					
 						if(x_state = "00000101")then -- 5 use a diff color
-							if(y_state > p1_top and y_state <(p1_top+10))then
+							if((y_state > p1_top) and (y_state <(p1_top+10)))then
 								colour <= "001";
 							end if;
 						elsif(x_State = "00101101")then--70
@@ -268,22 +283,69 @@ BEGIN
 							colour <= "000";
 						end if;
 						
-						x_state <= x_state+ "00000001";
-					elsif (x_state = "10011111") then
-						x <= std_logic_vector(x_state);
-						x_state <= "00000000";
-						y_state <= y_state + "0000001";
-						if(y_state = "1111001") then
-							draw2fsm <= '1';
-						else
-							draw2fsm <= '0';
-						end if;	
-					else
 						x <= std_logic_vector( x_state);
 						x_state <= x_state + "00000001";
 					end if;
-					y<=std_logic_vector( y_state);
 					
+					if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
+						colour <= "111";
+					end if;
+					
+					y<=std_logic_vector( y_state);
+					x0:= "001010000";
+					y0:= "00111100";
+		
+		
+		
+--			plot <= '1';
+--			--x_state <= "00000001";
+--			--y_state <= "0000000";
+--			green <= "11111111";
+--					if (x_state = "00000000") then
+--						if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
+--							colour <="111";
+--						else
+--							colour <="000";
+--						end if;
+--						x <= std_logic_vector(x_state);
+--						
+--					--choose colour
+--						if(x_state = "00000101")then -- 5 use a diff color
+--							if(y_state > p1_top and y_state <(p1_top+10))then
+--								colour <= "001";
+--							end if;
+--						elsif(x_State = "00101101")then--70
+--							if(y_state > p2_top and y_state <(p2_top+10))then
+--								colour <= "001";
+--							end if;
+--						elsif(x_State = "01101001")then--105
+--							if(y_state > p3_top and y_state <(p3_top+10))then
+--								colour <= "011";
+--							end if;
+--						elsif(x_state = "10011010")then--154
+--							if(y_state > p4_top and y_state <(p4_top+10))then
+--								colour <= "011";
+--							end if;						
+--						else
+--							colour <= "000";
+--						end if;
+--						
+--						x_state <= x_state+ "00000001";
+--					elsif (x_state = "10011111") then
+--						x <= std_logic_vector(x_state);
+--						x_state <= "00000000";
+--						y_state <= y_state + "0000001";
+--						if(y_state = "1111001") then
+--							draw2fsm <= '1';
+--						else
+--							draw2fsm <= '0';
+--						end if;	
+--					else
+--						x <= std_logic_vector( x_state);
+--						x_state <= x_state + "00000001";
+--					end if;
+--					y<=std_logic_vector( y_state);
+--					
 		end if;
 	end process;
 END Behavioural;
