@@ -48,30 +48,30 @@ BEGIN
 
 	
 		process( CLOCK )
-			variable count: unsigned(27 downto 0) := "0000000000000000000000000000";
-			variable loop_count: unsigned(5 downto 0);
+			variable count: unsigned(21 downto 0) := "0000000000000000000000";
+			variable loop_count: unsigned(10 downto 0) := "00000000000";
 		begin	
 		if( CLOCK = '1' ) then
-			if( loop_count < "01010") then
-				if( count = "0000100110001001011010000000" ) then
+			if( loop_count < "00011000000") then
+				if( count = "1001100010010110100000" ) then
 					slowclock <= not slowclock;
-					count := "0000000000000000000000000000";
+					count := "0000000000000000000000";
 					loop_count := loop_count + 1;
 				else
 					count := count + 1;
 				end if;
-			elsif (loop_count < "10100") then
-				if( count = "0000011010101100111111000000" ) then
+			elsif (loop_count < "11111111111") then
+				if( count = "0011110100001001000000" ) then
 					slowclock <= not slowclock;
-					count := "0000000000000000000000000000";
+					count := "0000000000000000000000";
 					loop_count := loop_count + 1;
 				else
 					count := count + 1;
 				end if;
 			else
-				if( count = "0000010011000100101101000000" ) then
+				if( count = "0001111010000100100000" ) then
 					slowclock <= not slowclock;
-					count := "0000000000000000000000000000";
+					count := "0000000000000000000000";
 				else
 					count := count + 1;
 				end if;
@@ -85,7 +85,7 @@ BEGIN
 		if(rising_edge(slowclock) and draw2dp ='1')then
 			if(reset2dp ='0')then
 				if(p1_sw='1')then
-					if(p1_top_sig > "00000001")then
+					if(p1_top_sig > "00000000")then
 						
 						p1_top_sig <= p1_top_sig - "00000001";
 					end if;
@@ -106,7 +106,7 @@ BEGIN
 		if(rising_edge(slowclock)and draw2dp ='1')then
 			if(reset2dp ='0')then
 				if(p2_sw='1')then
-					if(p2_top_sig > "00000001")then
+					if(p2_top_sig > "00000000")then
 						
 						p2_top_sig <= p2_top_sig - "00000001";
 					end if;
@@ -128,7 +128,7 @@ BEGIN
 		if(rising_edge(slowclock)and draw2dp ='1')then
 			if(reset2dp ='0')then
 				if(p3_sw='1')then
-					if(p3_top_sig > "00000001")then
+					if(p3_top_sig > "00000000")then
 						
 						p3_top_sig <= p3_top_sig - "00000001";
 					end if;
@@ -149,7 +149,7 @@ BEGIN
 		if(rising_edge(slowclock)and draw2dp ='1')then
 			if(reset2dp ='0')then
 				if(p4_sw='1')then
-					if(p4_top_sig > "00000001")then
+					if(p4_top_sig > "00000000")then
 						
 						p4_top_sig <= p4_top_sig - "00000001";
 					end if;
@@ -223,9 +223,9 @@ BEGIN
 		if(reset2dp = '1' and rising_edge(clock))then	--clear screen and set walls
 			plot <= '1';
 			
-					if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
-						colour <= "111";
-					end if;	
+--					if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
+--						colour <= "111";
+--					end if;	
 					
 					if (x_state = "00000000" ) then
 						x <= std_logic_vector(x_state);
@@ -291,9 +291,9 @@ BEGIN
 			p4_top:=p4_top_sig;
 			plot <= '1';
 			--colour <= "000";
-					if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
-						colour <= "111";
-					end if;	
+--					if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
+--						colour <= "111";
+--					end if;	
 					
 					if (x_state = "00000000" ) then
 						--if(y_state = "0000000" or y_state = "1110111")then --make the top an bottom line white 
@@ -339,7 +339,7 @@ BEGIN
 						if(x_state = puck_x and y_state = puck_y) then --puck_x position								--
 --							if( y_state = puck_y ) then --puck_y position
 								colour <="111";
---							end if;																			
+--							end if;																	
 						end if;																				--
 --------------------------------------------------------------------------------------	
 						
