@@ -50,38 +50,45 @@ BEGIN
 			variable count: unsigned(21 downto 0) := "0000000000000000000000";
 			variable loop_count: unsigned(10 downto 0) := "00000000000";
 		begin
-		if( CLOCK = '1' ) then
-			if( loop_count < "0001100000") then
-				if( count = "0110101011001111110000" ) then
-					slowclock <= not slowclock;
-					count := "0000000000000000000000";
-					loop_count := loop_count + 1;
+		if( CLOCK = '1') then
+			if( reset2dp = '0') then		
+				if( loop_count < "0011100000") then
+					if( count = "0110101011001111110000" ) then
+						slowclock <= not slowclock;
+						count := "0000000000000000000000";
+						loop_count := loop_count + 1;
+					else
+						count := count + 1;
+					end if;
+				elsif (loop_count < "1111111111") then
+					if( count = "0011110100001001000000" ) then
+						slowclock <= not slowclock;
+						count := "0000000000000000000000";
+						loop_count := loop_count + 1;
+					else
+						count := count + 1;
+					end if;
 				else
-					count := count + 1;
-				end if;
-			elsif (loop_count < "1111111111") then
-				if( count = "0011110100001001000000" ) then
-					slowclock <= not slowclock;
-					count := "0000000000000000000000";
-					loop_count := loop_count + 1;
-				else
-					count := count + 1;
+					if( count = "0001111010000100100000" ) then
+						slowclock <= not slowclock;
+						count := "0000000000000000000000";
+					else
+						count := count + 1;
+					end if;
 				end if;
 			else
-				if( count = "0001111010000100100000" ) then
-					slowclock <= not slowclock;
-					count := "0000000000000000000000";
-				else
-					count := count + 1;
-				end if;
+				loop_count := "00000000000";
 			end if;
 		end if;
 		end process;
 	
 
-	process(slowclock)
+	process(slowclock, reset2dp)
 	begin
-		if(rising_edge(slowclock) and draw2dp ='1')then
+		if( reset2dp = '1' ) then
+			p1_top_sig <= "00110111";
+	
+		elsif(rising_edge(slowclock) and draw2dp ='1')then
 			if(reset2dp ='0')then
 				if(p1_sw='1')then
 					if(p1_top_sig > "00000000")then
@@ -102,7 +109,10 @@ BEGIN
 	
 	process(slowclock)
 	begin
-		if(rising_edge(slowclock)and draw2dp ='1')then
+		if( reset2dp = '1' ) then
+			p2_top_sig <= "00110111";
+	
+		elsif(rising_edge(slowclock)and draw2dp ='1')then
 			if(reset2dp ='0')then
 				if(p2_sw='1')then
 					if(p2_top_sig > "00000000")then
@@ -123,8 +133,10 @@ BEGIN
 
 	process(slowclock)
 	begin
+		if( reset2dp = '1' ) then
+			p3_top_sig <= "00110111";		
 		
-		if(rising_edge(slowclock)and draw2dp ='1')then
+		elsif(rising_edge(slowclock)and draw2dp ='1')then
 			if(reset2dp ='0')then
 				if(p3_sw='1')then
 					if(p3_top_sig > "00000000")then
@@ -144,8 +156,11 @@ BEGIN
 	end process;
 	
 	process(slowclock)
-	begin		
-		if(rising_edge(slowclock)and draw2dp ='1')then
+	begin	
+		if( reset2dp = '1' ) then
+			p4_top_sig <= "00110111";
+	
+		elsif(rising_edge(slowclock)and draw2dp ='1')then
 			if(reset2dp ='0')then
 				if(p4_sw='1')then
 					if(p4_top_sig > "00000000")then
